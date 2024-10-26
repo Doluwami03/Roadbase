@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
     $user_type = $_POST['user_type']; // passenger or driver
-    
+
 
     if ($user_type === 'passenger') {
         // Query passengers table
@@ -14,7 +14,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
     } elseif ($user_type === 'driver') {
         // Query drivers table
         $sql = "SELECT * FROM drivers WHERE email = :email";
@@ -29,10 +28,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_type'] = $user_type;  // Either 'passenger' or 'driver'
         $_SESSION['name'] = $user['name'];
-    
+
         // Redirect based on user type
-            header("Location: profile.php");
+        header("Location: profile.php");
+        exit;
+    } else {
+        echo "<script>alert('Incorrect Login Details');</script>";
+        echo "<script>window.location.href='index.php';</script>";
         exit;
     }
 }
-?>
